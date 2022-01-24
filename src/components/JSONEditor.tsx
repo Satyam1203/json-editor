@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Input from './Input';
+import InputField from './InputField';
 
 /* eslint no-underscore-dangle: 0 */
 
@@ -17,47 +17,18 @@ function JSONEditor({ data }: EditorProps) {
 			<table cellPadding={6} cellSpacing={0}>
 				<thead>
 					<tr className="data-row">
-						{keys.map(key => <th>{key}</th>)}
+						{keys.map(key => <th key={key}>{key}</th>)}
 					</tr>
 				</thead>
 				{
 					data.map((user) => {
 						return (
-							<tbody className="object-container">
-								<tr className="data-row" key={user._id}>
-									{keys.map(key => <td>{user[key] || (user[key] ? 'active' : 'Inactive')}</td>)}
+							<tbody className="object-container" key={user._id}>
+								<tr className="data-row">
+									{keys.map(key => <td key={key}>{user[key] || user[key].toString()}</td>)}
 								</tr>
 								<tr className="data-row" key={user.id}>
-									<td>
-										<Input type="text" value={user._id} disabled />
-									</td>
-									<td>
-										<Input type="text" value={user.name} />
-									</td>
-									<td>
-										<Input type="email" value={user.email} />
-									</td>
-									<td>
-										<Input type="number" value={user.age} />
-									</td>
-									<td>
-										<input type="radio" value="active" name={user._id} defaultChecked={user.isActive} />
-										Active
-										<input type="radio" value="inactive" name={user._id} defaultChecked={!user.isActive} />
-										Inactive
-									</td>
-									<td>
-										<Input type="text" value={user.picture} />
-									</td>
-									<td>
-										<textarea value={user.address} />
-									</td>
-									<td>
-										<textarea value={user.about} />
-									</td>
-									<td>
-										<Input type="datetime-local" value={user.registered} />
-									</td>
+									{keys.map(key => <td key={key}><InputField fieldType={typeof user[key]} value={user[key]} /></td>)}
 								</tr>
 							</tbody>
 						);
