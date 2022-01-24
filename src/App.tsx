@@ -1,24 +1,20 @@
 import React from 'react';
+import { useState } from 'react';
 import './App.css';
+import FileUpload from './components/FileUpload';
+import JSONEditor from './components/JSONEditor';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [data, setData] = useState([]);
+
+	return (
+		<div className="App">
+			{
+				data.length === 0 ?
+					<FileUpload setData={setData} /> : <JSONEditor data={data} />
+			}
+		</div>
+	);
 }
 
 export default App;
