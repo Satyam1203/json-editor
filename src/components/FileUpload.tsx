@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
 interface FileProps {
 	setData: (args: any) => void,
@@ -9,7 +9,10 @@ interface FileProps {
 function FileUpload({
 	setData, err, setErr,
 }: FileProps) {
+	const [loading, setLoading] = useState(false);
+
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setLoading(true);
 		const fr = new FileReader();
 		fr.onload = () => {
 			const splits = e?.target?.files?.[0].name.split('.');
@@ -17,10 +20,12 @@ function FileUpload({
 
 			if (ext === 'json') {
 				const data = fr.result as string;
+				setLoading(false);
 				setData(JSON.parse(data));
 				console.log('json loaded');
 				setErr('');
 			} else {
+				setLoading(false);
 				setErr('Invalid file type');
 			}
 		};
@@ -35,6 +40,7 @@ function FileUpload({
 				type="file"
 				onChange={handleFileChange}
 			/>
+			{loading && <p>Loading Data...</p>}
 			<p>{err}</p>
 		</div>
 	);
