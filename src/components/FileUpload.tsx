@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 interface FileProps {
     setData: (args: any) => void
 }
 
 function FileUpload({ setData }: FileProps) {
-	const handleFileChange = (e: any) => {
+	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
 		console.log(e.target.files);
 		const fr = new FileReader();
-		fr.onload = function () {
+		fr.onload = () => {
 			const data = fr.result as string;
 			console.log(data);
 			setData(JSON.parse(data));
