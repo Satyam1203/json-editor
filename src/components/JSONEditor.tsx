@@ -4,15 +4,15 @@ import InputField from './InputField';
 /* eslint no-underscore-dangle: 0 */
 
 interface EditorProps {
-    data: any[],
+	data: any[],
     setData: (args: any) => void
 }
 
 interface InputFieldWrapperProps {
     keys: string[],
     user: any,
-    idx: any,
-    setData: any
+    idx: number,
+    setData: (args: any) => void
 }
 
 const TableHeader = React.memo(
@@ -21,7 +21,6 @@ const TableHeader = React.memo(
 			<tr className="data-row">
 				{keys.map(key => (
 					<th key={key}>
-						{console.log('header render')}
 						{key}
 					</th>
 				))}
@@ -34,7 +33,6 @@ const StaticObjectField = React.memo(
 	({ data }: {data: string}) => {
 		return (
 			<td>
-				{console.log('static object rerender')}
 				{data}
 			</td>
 		);
@@ -42,7 +40,7 @@ const StaticObjectField = React.memo(
 );
 
 const StaticObjectData = React.memo(
-	({ user, keys }: {user: any, keys: string[]}) => {
+	({ user, keys }: {user: {[key: string]: number | string | boolean}, keys: string[]}) => {
 		return (
 			<tr className="data-row">
 				{keys.map(field => <StaticObjectField key={field} data={user[field].toString()} />)}
@@ -55,6 +53,23 @@ const InputFieldsWrapper = React.memo(
 	({
 		user, keys, idx, setData,
 	}: InputFieldWrapperProps) => {
+		const [fieldMap, setFieldMap] = React.useState<{ [key: string]: string }>({});
+
+		const pickInputField = (field: string, value: string) => {
+			let inputType = 'text';
+			const fieldType = typeof value;
+			const regexEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+
+			if (fieldType === 'number') inputType = 'number';
+			else if (fieldType === 'boolean') inputType = 'radio';
+			else if (fieldType === 'string' && value.match(regexEmail)) inputType = 'email';
+			else if (fieldType === 'string' && value.length >= 30) inputType = 'textarea';
+			else if (fieldType === 'string' && Date.parse(value)) inputType = 'datetime-local';
+
+			setFieldMap(f => ({ ...f, [field]: inputType }));
+			return inputType;
+		};
+
 		const onChangeMemo = React.useCallback((idx: number, field: string, val: number | string | boolean) => {
 			setData((data: any) => [...data.slice(0, idx), { ...data[idx], [field]: val }, ...data.slice(idx + 1)]);
 		}, [setData]);
@@ -66,7 +81,7 @@ const InputFieldsWrapper = React.memo(
 						key={key}
 						idx={idx}
 						field={key}
-						fieldType={typeof user[key]}
+						fieldType={fieldMap[key] ?? pickInputField(key, user[key])}
 						value={user[key]}
 						onChange={onChangeMemo}
 						disabled={key === '_id'}
@@ -80,10 +95,9 @@ const InputFieldsWrapper = React.memo(
 const UserObjectWrapper = React.memo(
 	({
 		user, keys, setData, idx,
-	}: {user: any, keys: string[], setData: any, idx: number}) => {
+	}: {user: {[key: string]: number | string | boolean}, keys: string[], setData: any, idx: number}) => {
 		return (
 			<tbody className="object-container">
-				{console.log('user map')}
 				<StaticObjectData user={user} keys={keys} />
 				<InputFieldsWrapper setData={setData} user={user} keys={keys} idx={idx} />
 			</tbody>
@@ -96,7 +110,6 @@ function JSONEditor({ data, setData }: EditorProps) {
 	const keys = React.useMemo(() => Object.keys(data[0]), [data]);
 	const setDataMemo = React.useMemo(() => setData, [setData]);
 
-	console.log(keys);
 	return (
 		<main>
 			<table cellPadding={6} cellSpacing={0}>

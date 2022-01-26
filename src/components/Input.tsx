@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 interface InputProps {
     type: string,
     value: string,
-    onChange: (args: any) => void
+    onChange: (args: ChangeEvent<HTMLInputElement>) => void
     disabled?: boolean,
     checked?: boolean,
     name?: string
@@ -15,7 +15,6 @@ function Input({
 	return (
 		<div>
 			<input type={type} defaultValue={value} disabled={disabled} {...props} />
-			{console.log('rerender')}
 		</div>
 	);
 }

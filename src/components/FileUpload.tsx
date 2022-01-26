@@ -6,23 +6,22 @@ interface FileProps {
 	setErr: (args: string) => void
 }
 
-function FileUpload({ setData, err, setErr }: FileProps) {
+function FileUpload({
+	setData, err, setErr,
+}: FileProps) {
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const fr = new FileReader();
 		fr.onload = () => {
-			if (e.target.files?.length) {
-				const splits = e.target.files[0].name.split('.');
-				const ext = splits[splits.length - 1];
+			const splits = e?.target?.files?.[0].name.split('.');
+			const ext = splits?.[splits.length - 1];
 
-				if (ext === 'json') {
-					const data = fr.result as string;
-					setData(JSON.parse(data));
-					setErr('');
-				} else {
-					setErr('Invalid file type');
-				}
+			if (ext === 'json') {
+				const data = fr.result as string;
+				setData(JSON.parse(data));
+				console.log('json loaded');
+				setErr('');
 			} else {
-				setErr('Some error occured');
+				setErr('Invalid file type');
 			}
 		};
 		if (e.currentTarget.files) {
