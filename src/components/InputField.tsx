@@ -31,7 +31,7 @@ function InputField({
 
 		if (['text', 'email', 'datetime-local'].includes(type)) inputField = <Input type={type} value={value} onChange={e => onChange(idx, field, e.target.value)} disabled={disabled} />;
 		else if (type === 'number') inputField = <Input type={type} value={value} onChange={e => onChange(idx, field, e.target.valueAsNumber)} disabled={disabled} />;
-		else if (type === 'textarea') inputField = <textarea value={value} onChange={e => onChange(idx, field, e.target.value)} />;
+		else if (type === 'textarea') inputField = <textarea rows={4} cols={30} value={value} onChange={e => onChange(idx, field, e.target.value)} />;
 		else if (type === 'radio') {
 			inputField = (
 				<>

@@ -9,10 +9,14 @@ td {
   border: 1px solid grey;
 }
 
+td {
+  padding-top: 12px;
+}
+
 input[type="number"] {
   width: 100px;
 }
 
 .object-container {
-  box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+  box-shadow: rgba(3, 102, 214, 0.3) 0px 4px 0px 3px;
 }

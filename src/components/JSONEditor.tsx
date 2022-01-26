@@ -77,8 +77,24 @@ const InputFieldsWrapper = React.memo(
 	}
 );
 
+const UserObjectWrapper = React.memo(
+	({
+		user, keys, setData, idx,
+	}: {user: any, keys: string[], setData: any, idx: number}) => {
+		return (
+			<tbody className="object-container">
+				{console.log('user map')}
+				<StaticObjectData user={user} keys={keys} />
+				<InputFieldsWrapper setData={setData} user={user} keys={keys} idx={idx} />
+			</tbody>
+		);
+	},
+	(prev, next) => ((JSON.stringify(prev.keys) === JSON.stringify(next.keys)) && (JSON.stringify(prev.user) === JSON.stringify(next.user)))
+);
+
 function JSONEditor({ data, setData }: EditorProps) {
 	const keys = React.useMemo(() => Object.keys(data[0]), [data]);
+	const setDataMemo = React.useMemo(() => setData, [setData]);
 
 	console.log(keys);
 	return (
@@ -88,14 +104,7 @@ function JSONEditor({ data, setData }: EditorProps) {
 					<TableHeader keys={keys} />
 				</thead>
 				{
-					data.map((user, idx) => {
-						return (
-							<tbody className="object-container" key={user._id}>
-								<StaticObjectData user={user} keys={keys} />
-								<InputFieldsWrapper setData={setData} user={user} keys={keys} idx={idx} />
-							</tbody>
-						);
-					})
+					data.map((user, idx) => <UserObjectWrapper key={user._id} user={user} keys={keys} setData={setDataMemo} idx={idx} />)
 				}
 			</table>
 		</main>
