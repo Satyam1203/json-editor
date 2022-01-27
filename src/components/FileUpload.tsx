@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
+import { UserProps } from '../App';
 
 interface FileProps {
-	setData: (args: any) => void,
+	setData: (args: UserProps[] | ((args: UserProps[]) => UserProps[])) => void,
 	err: string,
 	setErr: (args: string) => void
 }
@@ -22,7 +23,6 @@ function FileUpload({
 				const data = fr.result as string;
 				setLoading(false);
 				setData(JSON.parse(data));
-				console.log('json loaded');
 				setErr('');
 			} else {
 				setLoading(false);

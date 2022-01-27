@@ -1,18 +1,19 @@
 import React from 'react';
 import { TableHeader, StaticUserData } from './UserData';
 import InputFieldsWrapper from './InputFieldsWrapper';
+import { UserProps } from '../App';
 
 /* eslint no-underscore-dangle: 0 */
 
 interface EditorProps {
-	data: any[],
-    setData: (args: any) => void
+	data: UserProps[],
+    setData: (args: UserProps[] | ((args: UserProps[]) => UserProps[])) => void
 }
 
 const UserObjectWrapper = React.memo(
 	({
 		user, keys, setData, idx,
-	}: {user: {[key: string]: number | string | boolean}, keys: string[], setData: any, idx: number}) => {
+	}: {user: UserProps, keys: string[], setData: (args: UserProps[] | ((args: UserProps[]) => UserProps[])) => void, idx: number}) => {
 		return (
 			<tbody className="object-container">
 				<StaticUserData user={user} keys={keys} />
@@ -34,7 +35,7 @@ function JSONEditor({ data, setData }: EditorProps) {
 					<TableHeader keys={keys} />
 				</thead>
 				{
-					data.map((user, idx) => <UserObjectWrapper key={user._id} user={user} keys={keys} setData={setDataMemo} idx={idx} />)
+					data.map((user, idx) => <UserObjectWrapper key={user._id.toString()} user={user} keys={keys} setData={setDataMemo} idx={idx} />)
 				}
 			</table>
 		</main>

@@ -1,11 +1,12 @@
 import React from 'react';
 import InputField from './InputField';
+import { UserProps } from '../App';
 
 interface InputFieldWrapperProps {
     keys: string[],
-    user: any,
+    user: UserProps,
     idx: number,
-    setData: (args: any) => void
+    setData: (args: UserProps[] | ((args: UserProps[]) => UserProps[])) => void
 }
 
 const InputFieldsWrapper = React.memo(
@@ -14,23 +15,23 @@ const InputFieldsWrapper = React.memo(
 	}: InputFieldWrapperProps) => {
 		const [fieldMap, setFieldMap] = React.useState<{ [key: string]: string }>({});
 
-		const pickInputField = (field: string, value: string) => {
+		const pickInputField = (field: string, value: string | number | boolean) => {
 			let inputType = 'text';
 			const fieldType = typeof value;
 			const regexEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
 			if (fieldType === 'number') inputType = 'number';
 			else if (fieldType === 'boolean') inputType = 'radio';
-			else if (fieldType === 'string' && value.match(regexEmail)) inputType = 'email';
-			else if (fieldType === 'string' && value.length >= 30) inputType = 'textarea';
-			else if (fieldType === 'string' && Date.parse(value)) inputType = 'datetime-local';
+			else if (fieldType === 'string' && value.toString().match(regexEmail)) inputType = 'email';
+			else if (fieldType === 'string' && value.toString().length >= 30) inputType = 'textarea';
+			else if (fieldType === 'string' && Date.parse(value.toString())) inputType = 'datetime-local';
 
 			setFieldMap(f => ({ ...f, [field]: inputType }));
 			return inputType;
 		};
 
 		const onChangeMemo = React.useCallback((idx: number, field: string, val: number | string | boolean) => {
-			setData((data: any) => [...data.slice(0, idx), { ...data[idx], [field]: val }, ...data.slice(idx + 1)]);
+			setData(data => ([...data.slice(0, idx), { ...data[idx], [field]: val }, ...data.slice(idx + 1)]));
 		}, [setData]);
 
 		return (

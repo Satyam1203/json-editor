@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react';
 
 interface InputProps {
     type: string,
-    value: string,
+    value: string | number,
     onChange: (args: ChangeEvent<HTMLInputElement>) => void
     disabled?: boolean,
     checked?: boolean,

@@ -5,7 +5,7 @@ interface InputFieldProps {
     idx: number,
     field: string,
     fieldType: string,
-    value: any,
+    value: string | number | boolean,
     disabled: boolean,
     onChange: (idx: number, field: string, value: string | number | boolean) => void
 }
@@ -16,9 +16,9 @@ function InputField({
 	const renderInputFields = (type: string) => {
 		let inputField: ReactElement = <input />;
 
-		if (['text', 'email', 'datetime-local'].includes(type)) inputField = <Input type={type} value={value} onChange={e => onChange(idx, field, e.target.value)} disabled={disabled} />;
-		else if (type === 'number') inputField = <Input type={type} value={value} onChange={e => onChange(idx, field, e.target.valueAsNumber)} disabled={disabled} />;
-		else if (type === 'textarea') inputField = <textarea rows={4} cols={30} value={value} onChange={e => onChange(idx, field, e.target.value)} />;
+		if (['text', 'email', 'datetime-local'].includes(type)) inputField = <Input type={type} value={value.toString()} onChange={e => onChange(idx, field, e.target.value)} disabled={disabled} />;
+		else if (type === 'number') inputField = <Input type={type} value={value.toString()} onChange={e => onChange(idx, field, e.target.valueAsNumber)} disabled={disabled} />;
+		else if (type === 'textarea') inputField = <textarea rows={4} cols={30} value={value.toString()} onChange={e => onChange(idx, field, e.target.value)} />;
 		else if (type === 'radio') {
 			inputField = (
 				<>
